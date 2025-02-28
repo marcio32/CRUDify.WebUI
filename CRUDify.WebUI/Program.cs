@@ -1,3 +1,5 @@
+using Infrastructure;
+
 namespace CRUDify.WebUI
 {
     public class Program
@@ -5,6 +7,8 @@ namespace CRUDify.WebUI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddInfrastructure(connectionString);
 
             // Add services to the container.
             builder.Services.AddRazorPages();

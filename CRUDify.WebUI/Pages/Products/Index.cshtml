@@ -1,0 +1,49 @@
+﻿@page
+@model CRUDify.WebUI.Pages.Products.IndexModel
+@{
+    ViewData["Title"] = "Lista de Productos";
+}
+
+<h2>Lista de Productos</h2>
+
+<table id="productsTable" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Descripcion</th>
+            <th>Imagen</th>
+            <th>Stock</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Description</td>
+                <td>@product.Image</td>
+                <td>@product.Stock</td>
+                <td>@product.Active</td>
+            </tr>
+            
+        }
+    </tbody>
+</table>
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+}
+
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#productsTable').DataTable();
+        });
+    </script>
+}
