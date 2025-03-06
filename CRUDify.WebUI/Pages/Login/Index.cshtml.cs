@@ -26,7 +26,7 @@ namespace CRUDify.WebUI.Pages.Login
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if(user != null)
             {
-                var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, false);
+                var result = await _signInManager.PasswordSignInAsync(user, Input.Password, false, false);
 
                 if (result.Succeeded)
                 {
