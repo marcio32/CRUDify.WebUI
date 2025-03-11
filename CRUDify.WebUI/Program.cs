@@ -1,4 +1,5 @@
 using Infrastructure;
+using Microsoft.AspNetCore.Identity;
 
 namespace CRUDify.WebUI
 {
@@ -12,6 +13,16 @@ namespace CRUDify.WebUI
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            }).AddCookie(IdentityConstants.ApplicationScheme, options =>
+            {
+                options.LoginPath = "/Login";
+                options.AccessDeniedPath = "/Login";
+            });
 
             var app = builder.Build();
 
@@ -28,7 +39,9 @@ namespace CRUDify.WebUI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.MapRazorPages();
 

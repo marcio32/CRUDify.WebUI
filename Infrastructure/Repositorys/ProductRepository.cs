@@ -23,14 +23,12 @@ namespace Infrastructure.Repositorys
 
         public async Task<IEnumerable<Product>> GetAllAsync()  => await _context.Products.ToListAsync();
 
-        public Task<Product?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Product?> GetByIdAsync(int id) => await _context.Products.FindAsync(id);
 
-        public Task UpdateAsync(Product product)
+        public async Task UpdateAsync(Product product)
         {
-            throw new NotImplementedException();
+            _context.Update(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -16,6 +16,7 @@
             <th>Imagen</th>
             <th>Stock</th>
             <th>Activo</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -29,20 +30,64 @@
                 <td>@product.Image</td>
                 <td>@product.Stock</td>
                 <td>@product.Active</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary editProductBtn" data-product-id="@product.Id">Editar</button>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
-@section Styles{
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Editar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editProductContent">
+                <!--Se Va a cargar la Partial-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
 }
 
-@section Scripts{
+@section Scripts {
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function () {
             $('#productsTable').DataTable();
+
+            //Evento para editar producto
+            $('.editProductBtn').click(function(){
+                var productId = $(this).data('product-id');
+                var url ='Products/EditProductPartial?id=' + productId;
+
+                $.get(url, function(data){
+                    $('#editProductContent').html(data);
+                    var modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+                    modal.show();
+
+                    $('#editProductForm').submit(function(e){
+                        e.preventDefault();
+                        $.post(url, $(this).serialize(),function(result){
+                            if(result.success){
+                                modal.hide();
+                                location.reload();
+                            }
+                        }).fail(function(){
+                            alert("error al guardar los cambios");
+                        });
+                    });
+                }).fail(function(){
+                    alert("error al guardar los cambios");
+               });
+            });
         });
     </script>
 }

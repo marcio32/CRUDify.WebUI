@@ -1,11 +1,13 @@
 using CRUDify.WebUI.Models;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CRUDify.WebUI.Pages.Login
 {
+    [AllowAnonymous]
     public class IndexModel : PageModel
     {
         private readonly SignInManager<UserAuthentication> _signInManager;
@@ -34,7 +36,7 @@ namespace CRUDify.WebUI.Pages.Login
                 }
             }
 
-            ErrorMessage = "Usuario o contraseña incorrectos";
+            ErrorMessage = "Usuario o contraseña incorrecta";
             return Page();
         }
     }

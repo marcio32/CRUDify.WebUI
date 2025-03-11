@@ -6,28 +6,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Iniciar Sesion</title>
+    <style>
+        body {
+        background-image: url('https://img.freepik.com/vector-gratis/particula-tecnologia-abstracta-realista-fondo_23-2148431735.jpg?t=st=1741494400~exp=1741498000~hmac=3057fce03567115039f84c4caa64bf9e02b483092d697f3cfbe55f8d34056080&w=1060');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <h2>Iniciar Sesion</h2>
-        <form method="post">
-            <div>
-                <label for="email">Email:</label>
-                <input id="email" asp-for="Input.Email" type="email" required />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-md-4">
+                <div class="card p-4">
+                    <h2 class="card-title text-center mb-4">Iniciar Sesion</h2>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input id="email" asp-for="Input.Email" type="email" class="form-control" required />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña:</label>
+                            <input id="password" asp-For="Input.Password" type="password" class="form-control" required />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="alert alert-danger mt-3" role="alert">
+                                <p>@Model.ErrorMessage</p>
+                            </div>
+                        }
+                    </form>
+                </div>
             </div>
-            <div>
-                <label for="password">Contraseña:</label>
-                <input id="password" asp-For="Input.Password" type="password" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <button type="submit">Ingresar</button>
-
-            <p class="text-danger">@Model.ErrorMessage</p>
-        </form>
+        </div>
     </div>
 </body>
 </html>

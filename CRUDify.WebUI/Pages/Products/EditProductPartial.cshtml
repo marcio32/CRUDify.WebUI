@@ -1,0 +1,17 @@
+﻿@page
+@model CRUDify.WebUI.Pages.Products.EditProductPartialModel
+@{
+    Layout = null;
+}
+<form id="editProductForm" method="post">
+    <div class="mb-3">
+        <label for="Name" class="form-label">Nombre:</label>
+        <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required/>
+    </div>
+    <div class="mb-3">
+        <label for="Price" class="form-label">Precio:</label>
+        <input type="text" id="Price" name="Price" class="form-control" value="@Model.Price" step="0.01" required />
+    </div>
+    <input type="hidden" name="Id" value="@Model.Id"/>
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+</form>

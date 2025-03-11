@@ -26,9 +26,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Products/Index">Productos</a>
                         </li>
-
+                    </ul>
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacidad</a>
+                            <form method="post" asp-page="Login/Logout">
+                                <button type="submit" class="btn btn-link nav-link">Cerrar Sesion</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
