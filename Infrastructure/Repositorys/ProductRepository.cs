@@ -11,14 +11,20 @@ namespace Infrastructure.Repositorys
 
         public ProductRepository(ApplicationDbContext context) => _context = context;
 
-        public Task AddAsync(Product product)
+        public async Task AddAsync(Product product)
         { 
-            throw new NotImplementedException();
+           _context.Add(product);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var product = await GetByIdAsync(id);
+            if(product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()  => await _context.Products.ToListAsync();

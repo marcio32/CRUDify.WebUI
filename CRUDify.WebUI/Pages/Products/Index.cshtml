@@ -5,7 +5,7 @@
 }
 
 <h2>Lista de Productos</h2>
-
+<button class="btn btn-primary mb-3 addProductBtn">Agregar</button>
 <table id="productsTable" class="display" style="width:100%">
     <thead>
         <tr>
@@ -32,6 +32,7 @@
                 <td>@product.Active</td>
                 <td>
                     <button type="button" class="btn btn-sm btn-primary editProductBtn" data-product-id="@product.Id">Editar</button>
+                    <button type="button" class="btn btn-sm btn-danger deleteProductBtn" data-product-id="@product.Id">Eliminar</button>
                 </td>
             </tr>
         }
@@ -45,7 +46,7 @@
                 <h5 class="modal-title" id="editProductModalLabel">Editar Producto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="editProductContent">
+            <div class="modal-body" id="productContent">
                 <!--Se Va a cargar la Partial-->
             </div>
         </div>
@@ -63,30 +64,129 @@
         $(document).ready(function () {
             $('#productsTable').DataTable();
 
-            //Evento para editar producto
-            $('.editProductBtn').click(function(){
-                var productId = $(this).data('product-id');
-                var url ='Products/EditProductPartial?id=' + productId;
-
-                $.get(url, function(data){
-                    $('#editProductContent').html(data);
+            $('.addProductBtn').click(function(){
+                 var url ='Products/ProductPartial';
+                  $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function(data){
+                    $('#productContent').html(data);
                     var modal = new bootstrap.Modal(document.getElementById('editProductModal'));
                     modal.show();
 
-                    $('#editProductForm').submit(function(e){
+                    $('#productForm').submit(function(e){
                         e.preventDefault();
-                        $.post(url, $(this).serialize(),function(result){
-                            if(result.success){
+
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: $(this).serialize(),
+                            success: function(result){
+                                if(result.success){
                                 modal.hide();
                                 location.reload();
+                                }
+                            },
+                            error: function(){
+                                alert("error al guardar los cambios");
                             }
-                        }).fail(function(){
-                            alert("error al guardar los cambios");
-                        });
+                        })
                     });
-                }).fail(function(){
-                    alert("error al guardar los cambios");
-               });
+                    },
+                    error: function(){
+                        alert("error al guardar los cambios");
+                    }
+                })
+            });
+
+
+            $('.editProductBtn').click(function(){
+                var productId = $(this).data('product-id');
+                var url ='Products/ProductPartial?id=' + productId;
+
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function(data){
+                    $('#productContent').html(data);
+                    var modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+                    modal.show();
+
+                    $('#productForm').submit(function(e){
+                        e.preventDefault();
+
+                        $.ajax({
+                            url: url,
+                            type: "PUT",
+                            data: $(this).serialize(),
+                            success: function(result){
+                                if(result.success){
+                                modal.hide();
+                                location.reload();
+                                }
+                            },
+                            error: function(){
+                                alert("error al guardar los cambios");
+                            }
+                        })
+
+                        //NO USAR JQUERY PARA CONSULTAS
+                        // $.put(url, $(this).serialize(),function(result){
+                        //     if(result.success){
+                        //         modal.hide();
+                        //         location.reload();
+                        //     }
+                        // }).fail(function(){
+                        //     alert("error al guardar los cambios");
+                        // });
+                    });
+                    },
+                    error: function(){
+                        alert("error al guardar los cambios");
+                    }
+                })
+            });
+
+            $('.deleteProductBtn').click(function(){
+                Swal.fire({
+                title: "Eliminar",
+                text: "Estas por eliminar un producto!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Eliminar",
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                      var productId = $(this).data("product-id");
+                        $.ajax({
+                            url : '@Url.Page("/Products/Index", new { handler = "DeleteProduct" })',
+                            type : "POST",
+                            headers:{"RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()},
+                            contentType: "application/json",
+                            data: JSON.stringify({Id: productId}),
+                            success: function(response){
+                                if(response.success){
+                                      Swal.fire({
+                                      title: "Eliminado!",
+                                      text: "El producto fue eliminado.",
+                                      icon: "success"
+                                      });
+                                }
+                                else
+                                {
+                                     Swal.fire({
+                                      title: "Error!",
+                                      text: "Hubo un problema al eliminar el producto.",
+                                      icon: "error"
+                                    })
+                                }
+                            }
+
+                        });
+                  }
+                });
             });
         });
     </script>

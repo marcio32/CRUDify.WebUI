@@ -1,0 +1,33 @@
+﻿@page
+@model CRUDify.WebUI.Pages.Products.ProductPartialModel
+@{
+    Layout = null;
+}
+<form id="productForm" method="post">
+    <div class="mb-3">
+        <label for="Name" class="form-label">Nombre:</label>
+        <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
+    </div>
+    <div class="mb-3">
+        <label for="Price" class="form-label">Precio:</label>
+        <input type="number" id="Price" name="Price" class="form-control" value="@Model.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)" step="0.01" required />
+    </div>
+    <div class="mb-3">
+        <label for="Price" class="form-label">Descripcion</label>
+        <input type="text" id="Description" name="Description" class="form-control" value="@Model.Description" required />
+    </div>
+    <div class="mb-3">
+        <label for="Image" class="form-label">Imagen</label>
+        <input type="text" id="Image" name="Image" class="form-control" value="@Model.Image" required />
+    </div>   
+    <div class="mb-3">
+        <label for="Stock" class="form-label">Stock</label>
+        <input type="text" id="Stock" name="Stock" class="form-control" value="@Model.Stock" required />
+    </div> 
+    <div class="mb-3">
+        <label for="Active" class="form-label">Active</label>
+        <input type="checkbox" id="Active" name="Active" class="form-check-input" @(Model.Active ? "checked" : null) />
+    </div>
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+</form>
