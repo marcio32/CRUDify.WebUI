@@ -3,7 +3,7 @@
 @{
     Layout = null;
 }
-<form id="productForm" method="post">
+<form id="productForm" method="post" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="Name" class="form-label">Nombre:</label>
         <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
@@ -18,7 +18,7 @@
     </div>
     <div class="mb-3">
         <label for="Image" class="form-label">Imagen</label>
-        <input type="text" id="Image" name="Image" class="form-control" value="@Model.Image" required />
+        <input type="file" id="Image" name="Image" class="form-control" required />
     </div>   
     <div class="mb-3">
         <label for="Stock" class="form-label">Stock</label>

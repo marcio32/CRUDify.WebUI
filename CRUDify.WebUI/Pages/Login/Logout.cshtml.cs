@@ -9,9 +9,9 @@ namespace CRUDify.WebUI.Pages.Login
     [Authorize]
     public class LogoutModel : PageModel
     {
-      private readonly SignInManager<UserAuthentication> _signInManager;
+      private readonly SignInManager<User> _signInManager;
 
-        public LogoutModel(SignInManager<UserAuthentication> signInManager)
+        public LogoutModel(SignInManager<User> signInManager)
         {
             _signInManager = signInManager;
         }

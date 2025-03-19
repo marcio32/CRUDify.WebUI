@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<UserAuthentication>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
@@ -15,9 +15,9 @@ namespace Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            var hasher = new PasswordHasher<UserAuthentication>();
+            var hasher = new PasswordHasher<User>();
 
-            var user = new UserAuthentication
+            var user = new User
             {
                 Id = "1",
                 UserName = "admin",
@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence
 
             user.PasswordHash = hasher.HashPassword(user, "1234");
            
-            builder.Entity<UserAuthentication>().HasData(user);
+            builder.Entity<User>().HasData(user);
         }
     }
 }

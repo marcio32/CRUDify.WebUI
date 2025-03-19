@@ -1,61 +1,42 @@
 ﻿@page
-@model CRUDify.WebUI.Pages.Products.IndexModel
+@model CRUDify.WebUI.Pages.Users.IndexModel
 @{
-    ViewData["Title"] = "Lista de Productos";
+    ViewData["Title"] = "Lista de Usuarios";
 }
 
-<h2>Lista de Productos</h2>
-<button class="btn btn-primary mb-3 addProductBtn">Agregar</button>
-<table id="productsTable" class="display" style="width:100%">
+<h2>Lista de Usuarios</h2>
+<button class="btn btn-primary mb-3 addUserBtn">Agregar</button>
+<table id="usersTable" class="display" style="width:100%">
     <thead>
         <tr>
             <th>Id</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Descripcion</th>
-            <th>Imagen</th>
-            <th>Stock</th>
-            <th>Activo</th>
+            <th>Email</th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var product in Model.Products)
+        @foreach (var user in Model.Users)
         {
             <tr>
-                <td>@product.Id</td>
-                <td>@product.Name</td>
-                <td>@product.Price</td>
-                <td>@product.Description</td>
+                <td>@user.Id</td>
+                <td>@user.Email</td>
                 <td>
-                    @if (!string.IsNullOrEmpty(product.Image))
-                    {
-                        <img src="data:image/jpeg;base64,@product.Image" alt="Imagen del producto" style="width:100px; height:100px" />
-                    }
-                    else
-                    {
-                        <span>Sin Imagen</span>
-                    }
-                </td>
-                <td>@product.Stock</td>
-                <td>@(product.Active ? "Si" : "No")</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-primary editProductBtn" data-product-id="@product.Id">Editar</button>
-                    <button type="button" class="btn btn-sm btn-danger deleteProductBtn" data-product-id="@product.Id">Eliminar</button>
+                    <button type="button" class="btn btn-sm btn-primary editUserBtn" data-user-id="@user.Id">Editar</button>
+                    <button type="button" class="btn btn-sm btn-danger deleteUserBtn" data-user-id="@user.Id">Eliminar</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editProductModalLabel">Editar Producto</h5>
+                <h5 class="modal-title" id="editUserModalLabel">Editar Usuarios</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="productContent">
+            <div class="modal-body" id="userContent">
                 <!--Se Va a cargar la Partial-->
             </div>
         </div>
@@ -71,19 +52,19 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function () {
-            $('#productsTable').DataTable();
+            $('#usersTable').DataTable();
 
-            $('.addProductBtn').click(function(){
-                 var url ='Products/ProductPartial';
+            $('.addUserBtn').click(function(){
+                 var url ='Users/UsuariosPartial';
                   $.ajax({
                     url: url,
                     type: "GET",
                     success: function(data){
-                    $('#productContent').html(data);
-                    var modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+                    $('#userContent').html(data);
+                    var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
                     modal.show();
 
-                    $('#productForm').submit(function(e){
+                    $('#userForm').submit(function(e){
                         e.preventDefault();
                         var formData = new FormData(this);
                         $.ajax({
@@ -111,19 +92,19 @@
             });
 
 
-            $('.editProductBtn').click(function(){
-                var productId = $(this).data('product-id');
-                var url ='Products/ProductPartial?id=' + productId;
+            $('.editUserBtn').click(function(){
+                var userId = $(this).data('user-id');
+                var url ='Users/UserPartial?id=' + userId;
 
                 $.ajax({
                     url: url,
                     type: "GET",
                     success: function(data){
-                    $('#productContent').html(data);
-                    var modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+                    $('#userContent').html(data);
+                    var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
                     modal.show();
 
-                    $('#productForm').submit(function(e){
+                    $('#userForm').submit(function(e){
                         e.preventDefault();
                         var formData = new FormData(this);
                         $.ajax({
@@ -142,16 +123,6 @@
                                 alert("error al guardar los cambios");
                             }
                         })
-
-                        //NO USAR JQUERY PARA CONSULTAS
-                        // $.put(url, $(this).serialize(),function(result){
-                        //     if(result.success){
-                        //         modal.hide();
-                        //         location.reload();
-                        //     }
-                        // }).fail(function(){
-                        //     alert("error al guardar los cambios");
-                        // });
                     });
                     },
                     error: function(){
@@ -160,10 +131,10 @@
                 })
             });
 
-            $('.deleteProductBtn').click(function(){
+            $('.deleteUserBtn').click(function(){
                 Swal.fire({
                 title: "Eliminar",
-                text: "Estas por eliminar un producto!",
+                text: "Estas por eliminar un usero!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -172,20 +143,20 @@
                 cancelButtonText: "Cancelar"
                 }).then((result) => {
                   if (result.isConfirmed) {
-                      var productId = $(this).data("product-id");
-                      var url ='Products/ProductPartial';
+                      var userId = $(this).data("user-id");
+                      var url ='Users/UserPartial';
                       debugger
                         $.ajax({
-                            url : '@Url.Page("/Products/ProductPartial", new { handler = "Product" })',
+                            url : '@Url.Page("/Users/UserPartial", new { handler = "User" })',
                             type: "DELETE",
                             headers:{"RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()},
                             contentType: "application/json",
-                            data: JSON.stringify({Id: productId}),
+                            data: JSON.stringify({Id: userId}),
                             success: function(response){
                                 if(response.success){
                                       Swal.fire({
                                       title: "Eliminado!",
-                                      text: "El producto fue eliminado.",
+                                      text: "El usero fue eliminado.",
                                       icon: "success"
                                       });
                                 location.reload();
@@ -194,7 +165,7 @@
                                 {
                                      Swal.fire({
                                       title: "Error!",
-                                      text: "Hubo un problema al eliminar el producto.",
+                                      text: "Hubo un problema al eliminar el usero.",
                                       icon: "error"
                                     })
                                 }

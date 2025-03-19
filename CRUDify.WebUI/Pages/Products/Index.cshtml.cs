@@ -16,15 +16,6 @@ namespace CRUDify.WebUI.Pages.Products
 
         public async Task OnGetAsync() => Products = await _productRepository.GetAllAsync();
 
-        public async Task<IActionResult> OnPostDeleteProductAsync(DeleteProductRequest request)
-        {
-            await _productRepository.DeleteAsync(request.Id);
-            return new JsonResult(new { success = true });
-        }
 
-        public class DeleteProductRequest
-        {
-            public int Id { get; set; }
-        }
     }
 }

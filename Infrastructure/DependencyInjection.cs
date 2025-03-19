@@ -20,12 +20,14 @@ namespace Infrastructure
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddIdentityCore<UserAuthentication>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<SignInManager<UserAuthentication>>();
-            services.AddScoped<UserManager<UserAuthentication>>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<SignInManager<User>>();
+            services.AddScoped<UserManager<User>>();
             return services;
         }
         

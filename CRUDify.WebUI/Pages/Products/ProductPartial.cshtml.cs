@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using CRUDify.WebUI.Pages.Products.Request;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,11 +19,11 @@ namespace CRUDify.WebUI.Pages.Products
         [BindProperty]
         public string Name { get; set; }
         [BindProperty]
-        public decimal Price { get; set; }
+        public decimal Price { get; set; }  
         [BindProperty]
         public string Description { get; set; }
         [BindProperty]
-        public string Image { get; set; }
+        public IFormFile Image { get; set; }
         [BindProperty]
         public int Stock { get; set; }
         [BindProperty]
@@ -41,7 +42,6 @@ namespace CRUDify.WebUI.Pages.Products
                     Name = product.Name;
                     Price = product.Price;
                     Description = product.Description;
-                    Image = product.Image;
                     Stock = product.Stock;
                     Active = product.Active;
                 }
@@ -57,10 +57,18 @@ namespace CRUDify.WebUI.Pages.Products
                 Name = this.Name,
                 Price = this.Price,
                 Description = this.Description,
-                Image = this.Image,
                 Stock = this.Stock,
                 Active = Request.Form["Active"] == "on"
             };
+
+            if(Image != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await Image.CopyToAsync(memoryStream);
+                    product.Image = Convert.ToBase64String(memoryStream.ToArray());
+                }
+            }
 
             await _productRepository.AddAsync(product);
             return new JsonResult(new { success = true });
@@ -82,10 +90,35 @@ namespace CRUDify.WebUI.Pages.Products
             }
            
             product.Description = Description;
-            product.Image = Image;
             product.Stock = Stock;
             product.Active = Request.Form["Active"] == "on";
+
+            if(Image != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await Image.CopyToAsync(memoryStream);
+                    product.Image = Convert.ToBase64String(memoryStream.ToArray());
+                }
+            }
+
             await _productRepository.UpdateAsync(product);
+            return new JsonResult(new { success = true });
+        }
+
+
+        public async Task<IActionResult> OnDeleteProductAsync([FromBody] DeleteProductRequest request)
+        {
+            var product = await _productRepository.GetByIdAsync(request.Id);
+
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            product.Active = false;
+
+            await _productRepository.DeleteAsync(product);
             return new JsonResult(new { success = true });
         }
     }

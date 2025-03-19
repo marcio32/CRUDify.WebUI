@@ -10,10 +10,10 @@ namespace CRUDify.WebUI.Pages.Login
     [AllowAnonymous]
     public class IndexModel : PageModel
     {
-        private readonly SignInManager<UserAuthentication> _signInManager;
-        private readonly UserManager<UserAuthentication> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public IndexModel(SignInManager<UserAuthentication> signInManager, UserManager<UserAuthentication> userManager)
+        public IndexModel(SignInManager<User> signInManager, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;

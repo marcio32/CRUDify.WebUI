@@ -17,17 +17,13 @@ namespace Infrastructure.Repositorys
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Product product)
         {
-            var product = await GetByIdAsync(id);
-            if(product != null)
-            {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
-            }
+            _context.Update(product);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync()  => await _context.Products.ToListAsync();
+        public async Task<IEnumerable<Product>> GetAllAsync()  => await _context.Products.Where(x=>x.Active == true).ToListAsync();
 
         public async Task<Product?> GetByIdAsync(int id) => await _context.Products.FindAsync(id);
 
