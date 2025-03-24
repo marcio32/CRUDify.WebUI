@@ -55,7 +55,7 @@
             $('#usersTable').DataTable();
 
             $('.addUserBtn').click(function(){
-                 var url ='Users/UsuariosPartial';
+                 var url ='Users/UserPartial';
                   $.ajax({
                     url: url,
                     type: "GET",
@@ -106,6 +106,7 @@
 
                     $('#userForm').submit(function(e){
                         e.preventDefault();
+                        debugger
                         var formData = new FormData(this);
                         $.ajax({
                             url: url,
@@ -114,6 +115,7 @@
                             processData: false,
                             contentType: false,
                             success: function(result){
+                                debugger
                                 if(result.success){
                                 modal.hide();
                                 location.reload();
@@ -147,7 +149,7 @@
                       var url ='Users/UserPartial';
                       debugger
                         $.ajax({
-                            url : '@Url.Page("/Users/UserPartial", new { handler = "User" })',
+                            url : '@Url.Page("/Users/UsersPartial", new { handler = "User" })',
                             type: "DELETE",
                             headers:{"RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()},
                             contentType: "application/json",
