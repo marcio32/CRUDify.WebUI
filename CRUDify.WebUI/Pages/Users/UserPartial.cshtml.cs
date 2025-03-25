@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using CRUDify.WebUI.Pages.Products.Request;
 using Domain.Entities;
+using Infrastructure.Repositorys;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -83,7 +84,7 @@ namespace CRUDify.WebUI.Pages.Users
 
         public async Task<IActionResult> OnPutAsync()
         {
-            var user = await _userManager.FindByEmailAsync(Email);
+            var user = await _userManager.FindByIdAsync(Id);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var tokenEmail = await _userManager.GenerateChangeEmailTokenAsync(user, this.Email);
             var resultPassword = await _userManager.ResetPasswordAsync(user, token, this.Password);
@@ -106,6 +107,19 @@ namespace CRUDify.WebUI.Pages.Users
 
 
             return new JsonResult(new { success = resultPassword.Succeeded });
+        }
+
+
+        public async Task<IActionResult> OnDeleteUserAsync([FromBody] DeleteUserRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(request.Id.ToString());
+            if(user == null)
+            {
+                return new JsonResult(new { success = false });
+            }
+            var result = await _userManager.SetLockoutEnabledAsync(user, false);
+
+            return new JsonResult(new { success = true });
         }
 
     }

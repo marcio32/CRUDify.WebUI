@@ -1,5 +1,7 @@
+using CRUDify.WebUI.Middlewares;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 namespace CRUDify.WebUI
 {
@@ -7,6 +9,9 @@ namespace CRUDify.WebUI
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(Path.Combine(Directory.GetCurrentDirectory(), "logs", "log.txt"), rollingInterval: RollingInterval.Day).CreateLogger();
+
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddInfrastructure(connectionString);
@@ -24,8 +29,20 @@ namespace CRUDify.WebUI
                 options.AccessDeniedPath = "/Login";
             });
 
-            var app = builder.Build();
+            var authorizationPolicies = builder.Configuration.GetSection("AuthorizationPolicies").Get<Dictionary<string, string[]>>();
+            builder.Services.AddAuthorization(options =>
+            {
+                foreach (var policy in authorizationPolicies)
+                {
+                    options.AddPolicy(policy.Key, policyBuilder =>
+                    {
+                        policyBuilder.RequireRole(policy.Value);
+                    });
+                }
+            });
 
+            var app = builder.Build();
+            app.UseMiddleware<ExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {

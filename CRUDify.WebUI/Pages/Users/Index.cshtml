@@ -11,6 +11,7 @@
         <tr>
             <th>Id</th>
             <th>Email</th>
+            <th>Activo</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -20,6 +21,7 @@
             <tr>
                 <td>@user.Id</td>
                 <td>@user.Email</td>
+                <td>@(user.LockoutEnabled ? "Si" : "No")</td>
                 <td>
                     <button type="button" class="btn btn-sm btn-primary editUserBtn" data-user-id="@user.Id">Editar</button>
                     <button type="button" class="btn btn-sm btn-danger deleteUserBtn" data-user-id="@user.Id">Eliminar</button>
@@ -145,23 +147,24 @@
                 cancelButtonText: "Cancelar"
                 }).then((result) => {
                   if (result.isConfirmed) {
+
                       var userId = $(this).data("user-id");
                       var url ='Users/UserPartial';
-                      debugger
+
                         $.ajax({
-                            url : '@Url.Page("/Users/UsersPartial", new { handler = "User" })',
+                            url : '@Url.Page("/Users/UserPartial", new { handler = "User" })',
                             type: "DELETE",
                             headers:{"RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()},
                             contentType: "application/json",
                             data: JSON.stringify({Id: userId}),
                             success: function(response){
+                                debugger
                                 if(response.success){
                                       Swal.fire({
                                       title: "Eliminado!",
-                                      text: "El usero fue eliminado.",
+                                      text: "El usuario fue eliminado.",
                                       icon: "success"
                                       });
-                                location.reload();
                                 }
                                 else
                                 {

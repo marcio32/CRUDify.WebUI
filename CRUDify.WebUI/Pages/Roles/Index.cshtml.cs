@@ -1,10 +1,12 @@
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CRUDify.WebUI.Pages.Roles
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         public readonly RoleManager<IdentityRole> _roleRepository;

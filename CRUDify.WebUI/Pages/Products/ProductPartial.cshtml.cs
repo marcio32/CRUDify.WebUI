@@ -1,12 +1,14 @@
 using Application.Interfaces;
 using CRUDify.WebUI.Pages.Products.Request;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Globalization;
 
 namespace CRUDify.WebUI.Pages.Products
 {
+    [Authorize(Roles = "Admin, User")]
     public class ProductPartialModel : PageModel
     {
         private readonly IProductRepository _productRepository;

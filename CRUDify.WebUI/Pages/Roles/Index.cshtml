@@ -67,6 +67,7 @@
                     $('#roleForm').submit(function(e){
                         e.preventDefault();
                         var formData = new FormData(this);
+                        debugger
                         $.ajax({
                             url: url,
                             type: "POST",
@@ -143,6 +144,7 @@
                 cancelButtonText: "Cancelar"
                 }).then((result) => {
                   if (result.isConfirmed) {
+                      debugger
                       var roleId = $(this).data("role-id");
                       var url ='Roles/RolePartial';
                       debugger
@@ -151,7 +153,7 @@
                             type: "DELETE",
                             headers:{"RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()},
                             contentType: "application/json",
-                            data: JSON.stringify({Id: roleId}),
+                            data: JSON.stringify({Id: roleId.toString()}),
                             success: function(response){
                                 if(response.success){
                                       Swal.fire({

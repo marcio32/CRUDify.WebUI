@@ -1,5 +1,7 @@
 using Application.Interfaces;
 using CRUDify.WebUI.Pages.Products.Request;
+using CRUDify.WebUI.Pages.Roles.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +9,7 @@ using System.Globalization;
 
 namespace CRUDify.WebUI.Pages.Roles
 {
+    [Authorize(Roles = "Admin")]
     public class RolePartialModel : PageModel
     {
         private readonly RoleManager<IdentityRole> _rolmanager;
@@ -15,7 +18,7 @@ namespace CRUDify.WebUI.Pages.Roles
             _rolmanager = roleManager;
         }
         [BindProperty]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [BindProperty]
         public string Name { get; set; }
 
@@ -25,6 +28,7 @@ namespace CRUDify.WebUI.Pages.Roles
             var role = await _rolmanager.FindByIdAsync(id);
             if (role != null)
             {
+                Id = role.Id;
                 Name = role.Name;
             }
             return Page();
@@ -56,9 +60,9 @@ namespace CRUDify.WebUI.Pages.Roles
             return new JsonResult(new { success = result });
         }
 
-        public async Task<IActionResult> OnDeleteAsync()
+        public async Task<IActionResult> OnDeleteAsync([FromBody] DeleteRoleRequest deleteRoleRequest)
         {
-            var role = await _rolmanager.FindByIdAsync(Id.ToString());
+            var role = await _rolmanager.FindByIdAsync(deleteRoleRequest.Id);
             if (role == null)
             {
                 return BadRequest();

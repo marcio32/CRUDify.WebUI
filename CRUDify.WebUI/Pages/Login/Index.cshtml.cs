@@ -26,7 +26,7 @@ namespace CRUDify.WebUI.Pages.Login
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.FindByEmailAsync(Input.Email);
-            if(user != null)
+            if (user != null && user.LockoutEnabled == true)
             {
                 var result = await _signInManager.PasswordSignInAsync(user, Input.Password, false, false);
 

@@ -1,9 +1,11 @@
 using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CRUDify.WebUI.Pages.Users
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         public readonly IUserRepository _userRepository;

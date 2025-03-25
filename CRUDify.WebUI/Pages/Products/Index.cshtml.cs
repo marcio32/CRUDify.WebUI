@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CRUDify.WebUI.Pages.Products
 {
-    [Authorize]
+    [Authorize(Policy = "Usuarios")]
     public class IndexModel : PageModel
     {
 
