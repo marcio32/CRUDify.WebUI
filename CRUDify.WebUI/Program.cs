@@ -1,5 +1,6 @@
 using CRUDify.WebUI.Middlewares;
 using Infrastructure;
+using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
 
@@ -28,6 +29,8 @@ namespace CRUDify.WebUI
                 options.LoginPath = "/Login";
                 options.AccessDeniedPath = "/Login";
             });
+
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
             var authorizationPolicies = builder.Configuration.GetSection("AuthorizationPolicies").Get<Dictionary<string, string[]>>();
             builder.Services.AddAuthorization(options =>

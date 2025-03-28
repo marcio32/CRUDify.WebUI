@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTest", "CRUDify.WebUI.UnitTest\Application.IntegrationTest.csproj", "{155ECEDF-60BE-48B7-9B62-7B7E96367C83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Console", "Automatization\EmailService.Console.csproj", "{88D51B3B-7F2B-441F-91DE-6488F26E4863}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{155ECEDF-60BE-48B7-9B62-7B7E96367C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{155ECEDF-60BE-48B7-9B62-7B7E96367C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{155ECEDF-60BE-48B7-9B62-7B7E96367C83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88D51B3B-7F2B-441F-91DE-6488F26E4863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88D51B3B-7F2B-441F-91DE-6488F26E4863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88D51B3B-7F2B-441F-91DE-6488F26E4863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88D51B3B-7F2B-441F-91DE-6488F26E4863}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{CFFFB2F1-7008-4C44-B6F8-A3F547CD6EAC} = {8102CC32-DF88-4723-9893-349C8BE97950}
 		{92791F94-6B94-4FEE-BD6A-9739EBF9E94A} = {8102CC32-DF88-4723-9893-349C8BE97950}
 		{155ECEDF-60BE-48B7-9B62-7B7E96367C83} = {8102CC32-DF88-4723-9893-349C8BE97950}
+		{88D51B3B-7F2B-441F-91DE-6488F26E4863} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D5E22628-7C66-4EED-9AF2-E8F659569ADF}
