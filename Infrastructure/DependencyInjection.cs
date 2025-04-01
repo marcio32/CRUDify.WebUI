@@ -26,6 +26,7 @@ namespace Infrastructure
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IServiceRepository, ServiceRepository>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<SignInManager<User>>();

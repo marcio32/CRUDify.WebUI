@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CRUDify.WebUI.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    
 </head>
 <body>
     <header>
@@ -25,6 +27,10 @@
                         
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Products/Index">Productos</a>
+                        </li>    
+                        
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Services/Index">Servicios</a>
                         </li> 
                         
                         <li class="nav-item">
@@ -63,7 +69,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Styles", required: false)
 </body>

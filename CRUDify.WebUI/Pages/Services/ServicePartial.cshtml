@@ -1,0 +1,18 @@
+﻿@page
+@model CRUDify.WebUI.Pages.Services.ServicePartialModel
+@{
+    Layout = null;
+}
+
+<form id="serviceForm" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="Nombre" class="form-label">Nombre:</label>
+        <input type="text" id="Nombre" name="Nombre" class="form-control" value="@Model.Nombre" />
+    </div>
+    <div class="mb-3">
+        <label for="Activo" class="form-label">Activo:</label>
+        <input type="checkbox" id="Activo" name="Activo" class="form-check-input" @(Model.Activo ? "checked" : null) />
+    </div>
+    <input type="hidden" name="Id" value="@Model.Id"/>
+    <button type="submit" class="btn btn-primary"> Guardar Cambios</button>
+</form>
