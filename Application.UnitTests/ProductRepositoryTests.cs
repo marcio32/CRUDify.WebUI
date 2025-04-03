@@ -38,6 +38,22 @@ namespace Application.UnitTests
             Assert.Equal("Product 1", result.First().Name);
         }
 
+        [Fact]
+        public async Task AddProductAsync()
+        {
+            var product = new Product { Id = 1, Name = "Product 1", Price = 10, Stock = 10, Active = true };
+            await _productRepository.AddAsync(product);
+            _mockProductRepository.Verify(x => x.AddAsync(product), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateProductAsync()
+        {
+            var product = new Product { Id = 1, Name = "Product 1", Price = 10, Stock = 10, Active = true };
+            await _productRepository.UpdateAsync(product);
+            _mockProductRepository.Verify(x => x.UpdateAsync(product), Times.Once);
+        }
+
 
         [Fact]
         public async Task DeleteProductAsync()

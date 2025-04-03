@@ -12,10 +12,10 @@
     <title>Iniciar Sesion</title>
     <style>
         body {
-        background-image: url('https://img.freepik.com/vector-gratis/particula-tecnologia-abstracta-realista-fondo_23-2148431735.jpg?t=st=1741494400~exp=1741498000~hmac=3057fce03567115039f84c4caa64bf9e02b483092d697f3cfbe55f8d34056080&w=1060');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat
+            background-image: url('https://img.freepik.com/vector-gratis/particula-tecnologia-abstracta-realista-fondo_23-2148431735.jpg?t=st=1741494400~exp=1741498000~hmac=3057fce03567115039f84c4caa64bf9e02b483092d697f3cfbe55f8d34056080&w=1060');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat
         }
     </style>
 </head>
@@ -44,12 +44,49 @@
                             </div>
                         }
                         <div class="text-center mt-3">
-                            <a class="btn btn-primary w-100" href="~/signin-google">Ingresar con Google</a>
+                            <a href="#" id="forgot-password">Olvidate tu Clave?</a>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <form method="post" asp-page-handler="GoogleLogin">
+                            <button type="submit" class="btn btn-danger w-100">Ingresar con Google</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Recuperar Clave</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-page-handler="ForgotPassword">
+                        <div class="mb-3">
+                            <label for="forgot-email" class="form-label">Email:</label>
+                            <input id="forgot-email" asp-for="ForgotPasswordInput.Email" type="email" class="form-control" required />
+                            <span asp-validation-for="ForgotPasswordInput.Email" class="text-danger"></span>
+                            <button type="submit" class="btn btn-primary w-100 mt-3">Enviar</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#forgot-password").click(function(e){
+                e.preventDefault();
+                $('#forgotPasswordModal').modal('show');
+            });
+        });
+    </script>
 </body>
 </html>

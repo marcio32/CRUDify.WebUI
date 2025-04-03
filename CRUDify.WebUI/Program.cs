@@ -22,13 +22,23 @@ namespace CRUDify.WebUI
 
             builder.Services.AddAuthentication(options =>
             {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
             }).AddCookie(IdentityConstants.ApplicationScheme, options =>
             {
                 options.LoginPath = "/Login";
                 options.AccessDeniedPath = "/Login";
+            }).AddCookie(IdentityConstants.ExternalScheme)
+            .AddGoogle(options =>
+            {
+                var googleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+                options.ClientId = googleAuthSection["ClientId"];
+                options.ClientSecret = googleAuthSection["ClientSecret"];
+                options.CallbackPath = "/signin-google";
             });
+            ;
 
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
