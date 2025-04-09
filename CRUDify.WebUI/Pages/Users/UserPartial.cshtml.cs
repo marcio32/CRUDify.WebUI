@@ -1,10 +1,14 @@
 using Application.Interfaces;
 using CRUDify.WebUI.Pages.Products.Request;
 using Domain.Entities;
+using Infrastructure.Hubs;
 using Infrastructure.Repositorys;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Globalization;
 
 namespace CRUDify.WebUI.Pages.Users
@@ -13,10 +17,12 @@ namespace CRUDify.WebUI.Pages.Users
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public UserPartialModel(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly IHubContext<UserHub> _hubContext;
+        public UserPartialModel(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IHubContext<UserHub> hubContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -64,6 +70,7 @@ namespace CRUDify.WebUI.Pages.Users
 
             if (!result.Succeeded)
             {
+
                 return new JsonResult(new { success = false });
             }
 
@@ -78,7 +85,7 @@ namespace CRUDify.WebUI.Pages.Users
                 }
             }
 
-
+            await _hubContext.Clients.All.SendAsync("ReceiveUserUpdate", user);
             return new JsonResult(new { success = true });
         }
 
@@ -105,7 +112,7 @@ namespace CRUDify.WebUI.Pages.Users
                 var resultAddRoles = await _userManager.AddToRolesAsync(user, rolesToAdd);
             }
 
-
+            await _hubContext.Clients.All.SendAsync("ReceiveUserUpdate", user);
             return new JsonResult(new { success = resultPassword.Succeeded });
         }
 
@@ -118,6 +125,8 @@ namespace CRUDify.WebUI.Pages.Users
                 return new JsonResult(new { success = false });
             }
             var result = await _userManager.SetLockoutEnabledAsync(user, false);
+
+            await _hubContext.Clients.All.SendAsync("ReceiveUserUpdate", new { lockoutEnabled = false, id = user.Id, email = user.Email });
 
             return new JsonResult(new { success = true });
         }

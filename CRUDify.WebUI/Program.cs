@@ -1,5 +1,6 @@
 using CRUDify.WebUI.Middlewares;
 using Infrastructure;
+using Infrastructure.Hubs;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
@@ -31,13 +32,13 @@ namespace CRUDify.WebUI
                 options.LoginPath = "/Login";
                 options.AccessDeniedPath = "/Login";
             }).AddCookie(IdentityConstants.ExternalScheme)
-            .AddGoogle(options =>
-            {
-                var googleAuthSection = builder.Configuration.GetSection("Authentication:Google");
-                options.ClientId = googleAuthSection["ClientId"];
-                options.ClientSecret = googleAuthSection["ClientSecret"];
-                options.CallbackPath = "/signin-google";
-            });
+            //.AddGoogle(options =>
+            //{
+            //    var googleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+            //    options.ClientId = googleAuthSection["ClientId"];
+            //    options.ClientSecret = googleAuthSection["ClientSecret"];
+            //    options.CallbackPath = "/signin-google";
+            //});
             ;
 
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -53,6 +54,8 @@ namespace CRUDify.WebUI
                     });
                 }
             });
+
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
             app.UseMiddleware<ExceptionMiddleware>();
@@ -74,6 +77,11 @@ namespace CRUDify.WebUI
 
 
             app.MapRazorPages();
+            app.MapHub<ProductHub>("/productHub");
+            app.MapHub<RoleHub>("/roleHub");
+            app.MapHub<ServiceHub>("/serviceHub");
+            app.MapHub<UserHub>("/userHub");
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }

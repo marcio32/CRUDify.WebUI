@@ -1,18 +1,22 @@
 using Application.Interfaces;
 using CRUDify.WebUI.Pages.Services.Request;
 using Domain.Entities;
+using Infrastructure.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
+using System.Data;
 
 namespace CRUDify.WebUI.Pages.Services
 {
     public class ServicePartialModel : PageModel
     {
         private readonly IServiceRepository _serviceRepository;
-
-        public ServicePartialModel(IServiceRepository serviceRepository)
+        private readonly IHubContext<ServiceHub> _hubContext;
+        public ServicePartialModel(IServiceRepository serviceRepository, IHubContext<ServiceHub> hubContext)
         {
             _serviceRepository = serviceRepository;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -49,6 +53,7 @@ namespace CRUDify.WebUI.Pages.Services
             };
 
             await _serviceRepository.AddAsync(service);
+            await _hubContext.Clients.All.SendAsync("ReceiveServiceUpdate", service);
             return new JsonResult(new { success = true });
         }
 
@@ -65,6 +70,7 @@ namespace CRUDify.WebUI.Pages.Services
             service.Activo = Request.Form["Activo"] == "on";
 
             await _serviceRepository.UpdateAsync(service);
+            await _hubContext.Clients.All.SendAsync("ReceiveServiceUpdate", service);
             return new JsonResult(new { success = true });
         }
 
@@ -78,6 +84,7 @@ namespace CRUDify.WebUI.Pages.Services
             service.Activo = false;
 
             await _serviceRepository.DeleteAsync(service);
+            await _hubContext.Clients.All.SendAsync("ReceiveServiceUpdate", service);
 
             return new JsonResult(new { success = true });
         }

@@ -15,10 +15,10 @@
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="usersBody">
         @foreach (var user in Model.Users)
         {
-            <tr>
+            <tr data-user-id="@user.Id">
                 <td>@user.Id</td>
                 <td>@user.Email</td>
                 <td>@(user.LockoutEnabled ? "Si" : "No")</td>
@@ -53,6 +53,43 @@
 @section Scripts {
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <script>
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("/userHub").build();
+
+        connection.on("ReceiveUserUpdate", (user) => {
+            console.log("Usuario Actualizado: ", user.id);
+            debugger
+            const row = document.querySelector(`tr[data-user-id='${user.id}']`);
+
+
+            if(row){
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.email}</td>
+                    <td>${user.lockoutEnabled ? "Si" : "No"}</td>
+                     <td>
+                        <button type="button" class="btn btn-sm btn-primary editUserBtn" data-user-id="${user.id}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteUserBtn" data-user-id="${user.id}">Eliminar</button>
+                    </td>
+                `;
+            }else{
+                const newRow = document.createElement('tr');
+                newRow.setAttribute('data-user-id', user.id);
+                newRow.innerHTML = `
+                 <td>${user.id}</td>
+                 <td>${user.email}</td>
+                 <td>${user.lockoutEnabled ? "Si" : "No"}</td>
+                 <td>
+                        <button type="button" class="btn btn-sm btn-primary editUserBtn" data-user-id="${user.id}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteUserBtn" data-user-id="${user.id}">Eliminar</button>
+                </td>
+                `
+                document.getElementById('usersBody').appendChild(newRow);
+            }
+        });
+
+        connection.start().catch(error => console.error(err.toString()));
+
         $(document).ready(function () {
             $('#usersTable').DataTable();
 

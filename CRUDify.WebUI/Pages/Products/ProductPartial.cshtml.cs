@@ -1,9 +1,11 @@
 using Application.Interfaces;
 using CRUDify.WebUI.Pages.Products.Request;
 using Domain.Entities;
+using Infrastructure.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using System.Globalization;
 
 namespace CRUDify.WebUI.Pages.Products
@@ -12,9 +14,11 @@ namespace CRUDify.WebUI.Pages.Products
     public class ProductPartialModel : PageModel
     {
         private readonly IProductRepository _productRepository;
-        public ProductPartialModel(IProductRepository productRepository)
+        private readonly IHubContext<ProductHub> _hubContext;
+        public ProductPartialModel(IProductRepository productRepository, IHubContext<ProductHub> hubContext)
         {
             _productRepository = productRepository;
+            _hubContext = hubContext;
         }
         [BindProperty]
         public int Id { get; set; }
@@ -73,6 +77,7 @@ namespace CRUDify.WebUI.Pages.Products
             }
 
             await _productRepository.AddAsync(product);
+            await _hubContext.Clients.All.SendAsync("ReceiveProductUpdate", product);
             return new JsonResult(new { success = true });
         }
 
@@ -105,6 +110,7 @@ namespace CRUDify.WebUI.Pages.Products
             }
 
             await _productRepository.UpdateAsync(product);
+            await _hubContext.Clients.All.SendAsync("ReceiveProductUpdate", product);
             return new JsonResult(new { success = true });
         }
 
@@ -121,6 +127,7 @@ namespace CRUDify.WebUI.Pages.Products
             product.Active = false;
 
             await _productRepository.DeleteAsync(product);
+            await _hubContext.Clients.All.SendAsync("ReceiveProductUpdate", product);
             return new JsonResult(new { success = true });
         }
     }

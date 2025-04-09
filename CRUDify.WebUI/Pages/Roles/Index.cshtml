@@ -14,10 +14,10 @@
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="rolesBody">
         @foreach (var roles in Model.Roles)
         {
-            <tr>
+            <tr data-role-id="@roles.Id">
                 <td>@roles.Id</td>
                 <td>@roles.Name</td>
                 <td>
@@ -51,6 +51,48 @@
 @section Scripts {
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <script>
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("/roleHub").build();
+
+        connection.on("ReceiveRoleUpdate", (role) => {
+            console.log("Rol Actualizado: ", role.id);
+            debugger
+            const row = document.querySelector(`tr[data-role-id='${role.id}']`);
+
+            if(role.deleted != undefined){
+                  if(row){
+                    row.remove();
+                }
+                return;
+            }
+
+            if(row){
+                row.innerHTML = `
+                    <td>${role.id}</td>
+                    <td>${role.name}</td>
+                     <td>
+                        <button type="button" class="btn btn-sm btn-primary editRoleBtn" data-role-id="${role.id}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteRoleBtn" data-role-id="${role.id}">Eliminar</button>
+                    </td>
+                `;
+            }else{
+                const newRow = document.createElement('tr');
+                newRow.setAttribute('data-role-id', role.id);
+                newRow.innerHTML = `
+                <td>${role.id}</td>
+                    <td>${role.name}</td>
+                     <td>
+                        <button type="button" class="btn btn-sm btn-primary editRoleBtn" data-role-id="${role.id}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteRoleBtn" data-role-id="${role.id}">Eliminar</button>
+                </td>
+                `
+                document.getElementById('rolesBody').appendChild(newRow);
+            }
+        });
+
+        connection.start().catch(error => console.error(err.toString()));
+
+
         $(document).ready(function () {
             $('#rolesTable').DataTable();
 

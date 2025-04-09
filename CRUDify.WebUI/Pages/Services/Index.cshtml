@@ -16,10 +16,10 @@
         </tr>
     </thead>
 
-    <tbody>
+    <tbody id="ServicesBody">
         @foreach (var service in Model.Services)
         {
-            <tr>
+            <tr data-service-id="@service.Id">
                 <td>@service.Id</td>
                 <td>@service.Nombre</td>
                 <td>@(service.Activo ? "Si" : "No")</td>
@@ -48,6 +48,51 @@
 
 @section Scripts {
     <script>
+
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("/serviceHub").build();
+
+        connection.on("ReceiveServiceUpdate", (service) => {
+            console.log("Servicio Actualizado: ", service.id);
+            debugger
+            const row = document.querySelector(`tr[data-service-id='${service.id}']`);
+
+            if(!service.activo){
+                  if(row){
+                    row.remove();
+                }
+                return;
+            }
+
+            if(row){
+                row.innerHTML = `
+                    <td>${service.id}</td>
+                    <td>${service.nombre}</td>
+                    <td>${service.activo ? "Si" : "No"}</td>
+                     <td>
+                        <button type="button" class="btn btn-sm btn-primary editServiceBtn" data-service-id="${service.id}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteServiceBtn" data-service-id="${service.id}">Eliminar</button>
+                    </td>
+                `;
+            }else{
+                const newRow = document.createElement('tr');
+                newRow.setAttribute('data-service-id', service.id);
+                newRow.innerHTML = `
+                <td>${service.id}</td>
+                <td>${service.nombre}</td>
+                <td>${service.activo ? "Si" : "No"}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary editServiceBtn" data-service-id="${service.id}">Editar</button>
+                    <button type="button" class="btn btn-sm btn-danger deleteServiceBtn" data-service-id="${service.id}">Eliminar</button>
+                </td>
+                `
+                document.getElementById('servicesBody').appendChild(newRow);
+            }
+        });
+
+        connection.start().catch(error => console.error(err.toString()));
+
+
         $(document).ready(function(){
             $('#servicesTable').DataTable();
         });

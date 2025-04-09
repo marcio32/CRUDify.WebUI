@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CRUDify.WebUI.styles.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
-    
+
 </head>
 <body>
     <header>
@@ -24,19 +24,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Inicio</a>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Products/Index">Productos</a>
-                        </li>    
-                        
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Services/Index">Servicios</a>
-                        </li> 
-                        
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Roles/Index">Roles</a>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Users/Index">Usuarios</a>
                         </li>
@@ -51,10 +51,17 @@
                 </div>
             </div>
         </nav>
-      
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <div id="chat" style="position: fixed; bottom: 70px; right: 0; width:300px; background: #f8f9fa; border: 1px solid #ccc; border-radius: 5px; padding: 10px ">
+                <h5>Chat</h5>
+                <div id="messagesList"></div>
+                <input type="text" id="userInput" placeholder="Escribe tu nombre..." class="form-control mb-2" />
+                <input type="text" id="messageInput" placeholder="Escribe un mensaje..." class="form-control mb-2" />
+                <button id="sendButton" class="btn btn-primary btn-sm">Enviar</button>
+            </div>
             @RenderBody()
         </main>
     </div>
@@ -70,6 +77,32 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.on("ReceiveMessage", (user, message) => {
+            const msg = document.createElement("div");
+            msg.textContent = `${user}: ${message}`;
+            document.getElementById("messagesList").appendChild(msg);
+            const messageList =  document.getElementById("messagesList");
+            messageList.scrollTop = messageList.scrollHeigth;
+        });
+
+        connection.start().catch(error => console.error(err.toString()));
+
+        document.getElementById("sendButton").addEventListener("click", () => {
+            const user = document.getElementById("userInput").value;
+            const message = document.getElementById("messageInput").value;
+            if(message.trim() !== ""){
+                connection.invoke("SendMessage", user, message).catch(err => console.error(err.toString()));
+                document.getElementById("messageInput").value = "";
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Styles", required: false)
 </body>

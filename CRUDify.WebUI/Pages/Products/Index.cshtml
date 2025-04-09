@@ -19,10 +19,10 @@
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="productsBody">
         @foreach (var product in Model.Products)
         {
-            <tr>
+            <tr data-product-id="@product.Id">
                 <td>@product.Id</td>
                 <td>@product.Name</td>
                 <td>@product.Price</td>
@@ -64,8 +64,58 @@
 
 
 @section Scripts {
- 
     <script>
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("/productHub").build();
+
+        connection.on("ReceiveProductUpdate", (product) => {
+            console.log("Producto Actualizado: ", product.id);
+
+            const row = document.querySelector(`tr[data-product-id='${product.id}']`);
+            
+            if(!product.active){
+                if(row){
+                    row.remove();
+                }
+                return;
+            }
+
+            if(row){
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.price}</td>
+                    <td>${product.description}</td>
+                    <td>${product.image ? `<img src=data:image/jpeg;base64,${product.image} alt="Imagen del Producto" style="width:100px; height:100px"/>` : '<span>Sin Imagen</span>'}</td>
+                    <td>${product.stock}</td>
+                    <td>${product.active ? "Si" : "No"}</td>
+                     <td>
+                        <button type="button" class="btn btn-sm btn-primary editProductBtn" data-product-id="${product.id}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteProductBtn" data-product-id="${product.id}">Eliminar</button>
+                    </td>
+                `;
+            }else{
+                const newRow = document.createElement('tr');
+                newRow.setAttribute('data-product-id', product.id);
+                newRow.innerHTML = `
+                <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.price}</td>
+                    <td>${product.description}</td>
+                    <td>${product.image ? `<img src=data:image/jpeg;base64,${product.image} alt="Imagen del Producto" style="width:100px; height:100px"/>` : '<span>Sin Imagen</span>'}</td>
+                    <td>${product.stock}</td>
+                    <td>${product.active ? "Si" : "No"}</td>
+                     <td>
+                        <button type="button" class="btn btn-sm btn-primary editProductBtn" data-product-id="${product.id}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteProductBtn" data-product-id="${product.id}">Eliminar</button>
+                </td>
+                `
+                document.getElementById('productsBody').appendChild(newRow);
+            }
+        });
+
+        connection.start().catch(error => console.error(err.toString()));
+
         $(document).ready(function () {
             $('#productsTable').DataTable();
 

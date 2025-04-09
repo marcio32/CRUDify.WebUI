@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#chat {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+#messagesList div {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}

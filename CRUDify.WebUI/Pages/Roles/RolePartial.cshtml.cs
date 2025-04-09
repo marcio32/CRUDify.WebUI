@@ -1,10 +1,13 @@
 using Application.Interfaces;
 using CRUDify.WebUI.Pages.Products.Request;
 using CRUDify.WebUI.Pages.Roles.Request;
+using Domain.Entities;
+using Infrastructure.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using System.Globalization;
 
 namespace CRUDify.WebUI.Pages.Roles
@@ -13,9 +16,11 @@ namespace CRUDify.WebUI.Pages.Roles
     public class RolePartialModel : PageModel
     {
         private readonly RoleManager<IdentityRole> _rolmanager;
-        public RolePartialModel(RoleManager<IdentityRole> roleManager)
+        private readonly IHubContext<RoleHub> _hubContext;
+        public RolePartialModel(RoleManager<IdentityRole> roleManager, IHubContext<RoleHub> hubContext)
         {
             _rolmanager = roleManager;
+            _hubContext = hubContext;
         }
         [BindProperty]
         public string Id { get; set; }
@@ -41,7 +46,7 @@ namespace CRUDify.WebUI.Pages.Roles
                 Name = this.Name
             };
             var result = await _rolmanager.CreateAsync(role);
-
+            await _hubContext.Clients.All.SendAsync("ReceiveRoleUpdate", role);
 
             return new JsonResult(new { success = result });
 
@@ -57,6 +62,7 @@ namespace CRUDify.WebUI.Pages.Roles
             role.Name = this.Name;
 
             var result = await _rolmanager.UpdateAsync(role);
+            await _hubContext.Clients.All.SendAsync("ReceiveRoleUpdate", role);
             return new JsonResult(new { success = result });
         }
 
@@ -69,6 +75,7 @@ namespace CRUDify.WebUI.Pages.Roles
             }
 
             var result = await _rolmanager.DeleteAsync(role);
+            await _hubContext.Clients.All.SendAsync("ReceiveRoleUpdate", new { deleted = true, id = role.Id });
             return new JsonResult(new { success = result });
         }
 
