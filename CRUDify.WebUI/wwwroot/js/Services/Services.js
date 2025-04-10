@@ -4,7 +4,6 @@ const connectionService = new signalR.HubConnectionBuilder().withUrl("/serviceHu
 
 connectionService.on("ReceiveServiceUpdate", (service) => {
     console.log("Servicio Actualizado: ", service.id);
-    debugger
     const row = document.querySelector(`tr[data-service-id='${service.id}']`);
 
     if (!service.activo) {
@@ -59,7 +58,6 @@ $('.addServiceBtn').click(function () {
 
 
             $('#serviceForm').submit(function (e) {
-                debugger
                 e.preventDefault();
                 var formData = new FormData(this);
                 $.ajax({
@@ -101,7 +99,6 @@ $('.editServiceBtn').click(function () {
 
 
             $('#serviceForm').submit(function (e) {
-                debugger
                 e.preventDefault();
                 var formData = new FormData(this);
                 $.ajax({
@@ -141,7 +138,6 @@ $('.deleteServiceBtn').click(function () {
         cancelButtonText: "Cancelar"
     }).then((result) => {
         if (result.isConfirmed) {
-            debugger
             var serviceId = $(this).data("service-id");
             var url = 'Services/ServicePartial';
             $.ajax({

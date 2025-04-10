@@ -154,7 +154,6 @@ $(document).ready(function () {
             if (result.isConfirmed) {
                 var productId = $(this).data("product-id");
                 var url = 'Products/ProductPartial';
-                debugger
                 $.ajax({
                     url: '@Url.Page("/Products/ProductPartial", new { handler = "Product" })',
                     type: "DELETE",

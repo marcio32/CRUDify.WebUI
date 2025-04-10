@@ -3,7 +3,6 @@ const connectionRoles = new signalR.HubConnectionBuilder().withUrl("/roleHub").b
 
 connectionRoles.on("ReceiveRoleUpdate", (role) => {
     console.log("Rol Actualizado: ", role.id);
-    debugger
     const row = document.querySelector(`tr[data-role-id='${role.id}']`);
 
     if (role.deleted != undefined) {
@@ -56,7 +55,6 @@ $(document).ready(function () {
                 $('#roleForm').submit(function (e) {
                     e.preventDefault();
                     var formData = new FormData(this);
-                    debugger
                     $.ajax({
                         url: url,
                         type: "POST",
@@ -133,10 +131,8 @@ $(document).ready(function () {
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
-                debugger
                 var roleId = $(this).data("role-id");
                 var url = 'Roles/RolePartial';
-                debugger
                 $.ajax({
                     url: '@Url.Page("/Roles/RolePartial", new { handler = "Role" })',
                     type: "DELETE",

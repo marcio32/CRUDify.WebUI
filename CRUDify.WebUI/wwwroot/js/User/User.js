@@ -3,7 +3,6 @@ const connectionUsers = new signalR.HubConnectionBuilder().withUrl("/userHub").b
 
 connectionUsers.on("ReceiveUserUpdate", (user) => {
     console.log("Usuario Actualizado: ", user.id);
-    debugger
     const row = document.querySelector(`tr[data-user-id='${user.id}']`);
 
 
@@ -90,7 +89,6 @@ $(document).ready(function () {
 
                 $('#userForm').submit(function (e) {
                     e.preventDefault();
-                    debugger
                     var formData = new FormData(this);
                     $.ajax({
                         url: url,
@@ -99,7 +97,6 @@ $(document).ready(function () {
                         processData: false,
                         contentType: false,
                         success: function (result) {
-                            debugger
                             if (result.success) {
                                 modal.hide();
                                 location.reload();
@@ -140,7 +137,6 @@ $(document).ready(function () {
                     contentType: "application/json",
                     data: JSON.stringify({ Id: userId }),
                     success: function (response) {
-                        debugger
                         if (response.success) {
                             Swal.fire({
                                 title: "Eliminado!",
